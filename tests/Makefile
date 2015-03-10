@@ -7,8 +7,8 @@ CLAR_FIXTURE_PATH= $(TESTS_PATH)resources/
 DPKG_ROOT= ../examples/foo/
 MODEL_PATH= ../examples/foo/bin
 
-CFLAGS=-g -I.. -I. -I $(HOME)/.ssm/include -Wall -DCLAR_FIXTURE_PATH=\"$(CLAR_FIXTURE_PATH)\"
-LDFLAGS=-L$(MODEL_PATH)/C/templates -L $(HOME)/.ssm/lib -lssm -lssmtpl -lssm -lssmtpl -lm -lgsl -lgslcblas -ljansson -lzmq
+SSM_CFLAGS=$(CFLAGS) -g -I.. -I. -I $(HOME)/.ssm/include -Wall -DCLAR_FIXTURE_PATH=\"$(CLAR_FIXTURE_PATH)\"
+SSM_LDFLAGS=$(LDFLAGS) -L$(MODEL_PATH)/C/templates -L $(HOME)/.ssm/lib -lssm -lssmtpl -lssm -lssmtpl -lm -lgsl -lgslcblas -ljansson -lzmq
 
 .PHONY: clean test
 
@@ -17,7 +17,7 @@ objects = main.o parameters.o states.o observed.o iterators.o nav.o inputs.o dat
 
 # build the test executable itself
 ssmtest: $(objects) clar.h clar.suite clar.c fixture_data
-	$(CC) $(CFLAGS) -o $@ clar.c $(objects) $(LDFLAGS)
+	$(CC) $(SSM_CFLAGS) -o $@ clar.c $(objects) $(SSM_LDFLAGS)
 
 # test object files depend on clar macros
 $(objects) : clar.h

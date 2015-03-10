@@ -333,6 +333,7 @@ class Cmodel:
         ind = 0
         Cterm = ''
         stack = []
+
         while (ind < len(terms)):
 
             if terms[ind] in self.special_functions:
@@ -368,7 +369,6 @@ class Cmodel:
                 else:
                     Cterm += self.toC(terms[ind], no_correct_rate, force_par=force_par, xify=xify, human=human, set_t0=set_t0)
                     ind += 1
-
 
         return Cterm
 
@@ -416,7 +416,13 @@ class Cmodel:
 
         #remove the ssm___ prefix
         #term = ccode(simplify(pterm)).replace('ssm___', '') ##NOTE simplify is just too slow to be used...
-        term = ccode(pterm).replace('ssm___', '')
+        user_functions = {
+            "heaviside": "heaviside",
+            "ramp": "ramp",
+            "slowstep": "slowstep",
+            "sigmoid": "sigmoid",
+        }
+        term = ccode(pterm, user_functions = user_functions).replace('ssm___', '')
 
         #make the ssm C expression
         return self.generator_C(term, no_correct_rate, force_par=force_par, xify=xify, human=human, set_t0=set_t0)
