@@ -50,6 +50,10 @@ On OSX with [homebrew](http://brew.sh/) and [pip](https://pypi.python.org/pypi/p
 
     brew install jansson zmq gsl node
     sudo pip install jinja2 sympy python-dateutil
+
+You might also find it useful to install [json](https://www.npmjs.com/package/json), which we use below to look at JSON files:
+
+    npm install -g json
     
 ## Installing S|S|M itself
 
@@ -82,8 +86,11 @@ try the following:
     cd ssm/examples/tutorial
     ssm
     
-If the model compiles successfully, you're good to go!
+If the model compiles successfully, you're good to go! If you get a JSON syntax error (which could be caused by a missing comma etc.), you will get a message
+    
+    FAIL: Unexpected string
 
+You can then use [jsonlint](https://github.com/zaach/jsonlint) or the inbuilt syntax-checking capabilities of your editor (e.g., Emacs) to find where the problem is.
 
 ## Any problem with the install?
 
