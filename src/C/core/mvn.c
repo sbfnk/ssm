@@ -40,6 +40,7 @@ int ssm_rmvnorm(const gsl_rng *r, const int n, const gsl_vector *mean, const gsl
     //scale var with sd_fac^2
     gsl_matrix_scale(work, sd_fac*sd_fac);
 
+    gsl_set_error_handler_off();
     gsl_linalg_cholesky_decomp(work);
 
     for(k=0; k<n; k++)

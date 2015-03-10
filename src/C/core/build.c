@@ -228,7 +228,7 @@ ssm_nav_t *ssm_nav_new(json_t *jparameters, ssm_options_t *opts)
                             exit(EXIT_FAILURE);
                         }
 
-                        if(json_number_value(jcov_ii) > 0.0){
+                        /* if(json_number_value(jcov_ii) > 0.0){ */
 
                             if( ssm_in_par(nav->par_noise, nav->par_all->p[i]->name) ) {
                                 if(!(nav->noises_off & SSM_NO_WHITE_NOISE)){
@@ -269,7 +269,7 @@ ssm_nav_t *ssm_nav_new(json_t *jparameters, ssm_options_t *opts)
                                 }
                             }
 
-                        }
+                        /* } */
 
 
                     }
