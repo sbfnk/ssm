@@ -131,12 +131,12 @@ int main(int argc, char *argv[])
     for(m=1; m<n_iter; m++) {
         success = SSM_SUCCESS;
 
-        var = ssm_adapt_eps_var_sd_fac(&sd_fac, adapt, var_input, nav, m);
+        if (!opts->flag_no_proposal) {
+            var = ssm_adapt_eps_var_sd_fac(&sd_fac, adapt, var_input, nav, m);
 
-        ssm_theta_ran(proposed, theta, var, sd_fac, calc, nav, 1);
+            ssm_theta_ran(proposed, theta, var, sd_fac, calc, nav, 1);
+        }
 
-        ssm_theta2input(input, proposed, nav);
-        ssm_input2par(par_proposed, input, calc, nav);
 
         success |= ssm_check_ic(par_proposed, calc);
 
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
             ssm_kalman_reset_Ct(D_X[0], nav);
 
             success |= run_kalman_and_store_traj(D_X, par_proposed, fitness, data, calc, nav);
-            success |= ssm_metropolis_hastings(fitness, &ratio, proposed, theta, var, sd_fac, nav, calc, 1);
+            success |= ssm_metropolis_hastings(fitness, &ratio, proposed, theta, var, sd_fac, nav, calc, 1, !opts->flag_no_proposal);
         }
 
         if(success == SSM_SUCCESS){ //everything went well and the proposed theta was accepted

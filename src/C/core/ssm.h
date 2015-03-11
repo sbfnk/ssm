@@ -477,6 +477,7 @@ typedef struct
     char *end;               /**< ISO 8601 date when the simulation ends*/
     char *server;            /**< domain name or IP address of the particule server (e.g 127.0.0.1) */
     int flag_no_filter;      /**< do not filter */
+    int flag_no_proposal;    /**< do not propose */
 } ssm_options_t;
 
 
@@ -744,7 +745,7 @@ void ssm_hat_eval(ssm_hat_t *hat, ssm_X_t **J_X, ssm_par_t **J_par, ssm_nav_t *n
 /* bayes.c */
 ssm_err_code_t ssm_log_prob_proposal(double *log_proposal, ssm_theta_t *proposed, ssm_theta_t *theta, ssm_var_t *var, double sd_fac, ssm_nav_t *nav, int is_mvn);
 ssm_err_code_t ssm_log_prob_prior(double *log_prior, ssm_theta_t *theta, ssm_nav_t *nav, ssm_fitness_t *fitness);
-ssm_err_code_t ssm_metropolis_hastings(ssm_fitness_t *fitness, double *alpha, ssm_theta_t *proposed, ssm_theta_t *theta, gsl_matrix *var, double sd_fac , ssm_nav_t *nav, ssm_calc_t *calc, int is_mvn);
+ssm_err_code_t ssm_metropolis_hastings(ssm_fitness_t *fitness, double *alpha, ssm_theta_t *proposed, ssm_theta_t *theta, gsl_matrix *var, double sd_fac , ssm_nav_t *nav, ssm_calc_t *calc, int is_mvn, int metropolis);
 ssm_var_t *ssm_adapt_eps_var_sd_fac(double *sd_fac, ssm_adapt_t *a, ssm_var_t *var, ssm_nav_t *nav, int m);
 void ssm_adapt_ar(ssm_adapt_t *a, int is_accepted, int m);
 void ssm_theta_ran(ssm_theta_t *proposed, ssm_theta_t *theta, ssm_var_t *var, double sd_fac, ssm_calc_t *calc, ssm_nav_t *nav, int is_mvn);

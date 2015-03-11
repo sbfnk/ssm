@@ -28,7 +28,7 @@ static ssm_err_code_t run_smc(ssm_err_code_t (*f_pred) (ssm_X_t *, double, doubl
     fitness->n_all_fail = 0;
 
     for(j=0; j<fitness->J; j++){
-	fitness->cum_status[j] = SSM_SUCCESS;
+        fitness->cum_status[j] = SSM_SUCCESS;
     }
 
     for(n=0; n<data->n_obs; n++) {
@@ -36,33 +36,33 @@ static ssm_err_code_t run_smc(ssm_err_code_t (*f_pred) (ssm_X_t *, double, doubl
         t0 = (n) ? data->rows[n-1]->time: 0;
         t1 = data->rows[n]->time;
 
-	if(!workers->flag_tcp){
-	    for(j=0; j<fitness->J; j++){
-		ssm_X_copy(D_J_X[np1][j], D_J_X[n][j]);
-	    }
-	}
+        if(!workers->flag_tcp){
+            for(j=0; j<fitness->J; j++){
+                ssm_X_copy(D_J_X[np1][j], D_J_X[n][j]);
+            }
+        }
 
-	if(workers->flag_tcp){
-	    //send work
-	    for (j=0;j<fitness->J;j++) {
-		zmq_send(workers->sender, &n, sizeof (int), ZMQ_SNDMORE);
-		ssm_zmq_send_par(workers->sender, par, ZMQ_SNDMORE);
+        if(workers->flag_tcp){
+            //send work
+            for (j=0;j<fitness->J;j++) {
+                zmq_send(workers->sender, &n, sizeof (int), ZMQ_SNDMORE);
+                ssm_zmq_send_par(workers->sender, par, ZMQ_SNDMORE);
 
-		zmq_send(workers->sender, &j, sizeof (int), ZMQ_SNDMORE);
-		ssm_zmq_send_X(workers->sender, D_J_X[n][j], ZMQ_SNDMORE);
-		zmq_send(workers->sender, &(fitness->cum_status[j]), sizeof (ssm_err_code_t), 0);
-	    }
+                zmq_send(workers->sender, &j, sizeof (int), ZMQ_SNDMORE);
+                ssm_zmq_send_X(workers->sender, D_J_X[n][j], ZMQ_SNDMORE);
+                zmq_send(workers->sender, &(fitness->cum_status[j]), sizeof (ssm_err_code_t), 0);
+            }
 
-	    //get results from the workers
-	    for (j=0; j<fitness->J; j++) {
-		zmq_recv(workers->receiver, &the_j, sizeof (int), 0);
-		ssm_zmq_recv_X(D_J_X[ np1 ][ the_j ], workers->receiver);
-		zmq_recv(workers->receiver, &(fitness->weights[the_j]), sizeof (double), 0);
-		zmq_recv(workers->receiver, &(fitness->cum_status[the_j]), sizeof (ssm_err_code_t), 0);
-	    }
+            //get results from the workers
+            for (j=0; j<fitness->J; j++) {
+                zmq_recv(workers->receiver, &the_j, sizeof (int), 0);
+                ssm_zmq_recv_X(D_J_X[ np1 ][ the_j ], workers->receiver);
+                zmq_recv(workers->receiver, &(fitness->weights[the_j]), sizeof (double), 0);
+                zmq_recv(workers->receiver, &(fitness->cum_status[the_j]), sizeof (ssm_err_code_t), 0);
+            }
 
-	} else if(calc[0]->threads_length > 1){
-	    //send work
+        } else if(calc[0]->threads_length > 1){
+            //send work
             for (i=0; i<calc[0]->threads_length; i++) {
                 zmq_send(workers->sender, &i, sizeof (int), ZMQ_SNDMORE);
                 zmq_send(workers->sender, &n, sizeof (int), 0);
@@ -74,15 +74,15 @@ static ssm_err_code_t run_smc(ssm_err_code_t (*f_pred) (ssm_X_t *, double, doubl
             }
         } else {
 
-	    for(j=0;j<fitness->J;j++) {
-		ssm_X_reset_inc(D_J_X[np1][j], data->rows[n], nav);
-		fitness->cum_status[j] |= (*f_pred)(D_J_X[np1][j], t0, t1, par, nav, calc[0]);
-		if(data->rows[n]->ts_nonan_length) {
-		    fitness->weights[j] = (fitness->cum_status[j] == SSM_SUCCESS) ?  exp(ssm_log_likelihood(data->rows[n], D_J_X[np1][j], par, calc[0], nav, fitness)) : 0.0;
-		    fitness->cum_status[j] = SSM_SUCCESS;
-		}
-	    }
-	}
+            for(j=0;j<fitness->J;j++) {
+                ssm_X_reset_inc(D_J_X[np1][j], data->rows[n], nav);
+                fitness->cum_status[j] |= (*f_pred)(D_J_X[np1][j], t0, t1, par, nav, calc[0]);
+                if(data->rows[n]->ts_nonan_length) {
+                    fitness->weights[j] = (fitness->cum_status[j] == SSM_SUCCESS) ?  exp(ssm_log_likelihood(data->rows[n], D_J_X[np1][j], par, calc[0], nav, fitness)) : 0.0;
+                    fitness->cum_status[j] = SSM_SUCCESS;
+                }
+            }
+        }
 
         if(data->rows[n]->ts_nonan_length) {
             if(ssm_weight(fitness, data->rows[n], nav, n)) {
@@ -171,8 +171,8 @@ int main(int argc, char *argv[])
     ssm_dic_init(fitness, fitness->log_like_prev, fitness->log_prior_prev);
 
     if (nav->print & SSM_PRINT_LOG) {
-	snprintf(str, SSM_STR_BUFFSIZE, "%d\t logLike.: %g\t accepted: %d\t acc. rate: %g", m, fitness->log_like_prev + fitness->log_prior_prev, !(success & SSM_MH_REJECT), adapt->ar);
-	ssm_print_log(str);
+        snprintf(str, SSM_STR_BUFFSIZE, "%d\t logLike.: %g\t accepted: %d\t acc. rate: %g", m, fitness->log_like_prev + fitness->log_prior_prev, !(success & SSM_MH_REJECT), adapt->ar);
+        ssm_print_log(str);
     }
 
     ////////////////
@@ -181,8 +181,11 @@ int main(int argc, char *argv[])
     double sd_fac;
     double ratio;
     for(m=1; m<n_iter; m++) {
-        var = ssm_adapt_eps_var_sd_fac(&sd_fac, adapt, var_input, nav, m);
-        ssm_theta_ran(proposed, theta, var, sd_fac, calc[0], nav, 1);
+        if (!opts->flag_no_proposal) {
+            var = ssm_adapt_eps_var_sd_fac(&sd_fac, adapt, var_input, nav, m);
+            ssm_theta_ran(proposed, theta, var, sd_fac, calc[0], nav, 1);
+        }
+
         ssm_theta2input(input, proposed, nav);
         ssm_input2par(par_proposed, input, calc[0], nav);
 
@@ -195,8 +198,8 @@ int main(int argc, char *argv[])
                 ssm_X_copy(D_J_X[0][j], D_J_X[0][0]);
             }
 
-	    success |= run_smc(f_pred, D_J_X, D_J_X_tmp, par_proposed, calc, data, fitness, nav, workers);
-            success |= ssm_metropolis_hastings(fitness, &ratio, proposed, theta, var, sd_fac, nav, calc[0], 1);
+            success |= run_smc(f_pred, D_J_X, D_J_X_tmp, par_proposed, calc, data, fitness, nav, workers);
+            success |= ssm_metropolis_hastings(fitness, &ratio, proposed, theta, var, sd_fac, nav, calc[0], 1, !opts->flag_no_proposal);
         }
 
         if(success == SSM_SUCCESS){ //everything went well and the proposed theta was accepted
@@ -225,22 +228,22 @@ int main(int argc, char *argv[])
         if (nav->print & SSM_PRINT_TRACE){
             ssm_print_trace(nav->trace, theta, nav, fitness->log_like_prev + fitness->log_prior_prev, m);
         }
-	ssm_dic_update(fitness, fitness->log_like_prev, fitness->log_prior_prev);
+        ssm_dic_update(fitness, fitness->log_like_prev, fitness->log_prior_prev);
 
 
         if (nav->print & SSM_PRINT_DIAG) {
             ssm_print_ar(nav->diag, adapt, m);
         }
 
-	if (nav->print & SSM_PRINT_LOG) {
-	    snprintf(str, SSM_STR_BUFFSIZE, "%d\t logLike.: %g\t accepted: %d\t acc. rate: %g", m, fitness->log_like_prev + fitness->log_prior_prev, !(success & SSM_MH_REJECT), adapt->ar);
-	    ssm_print_log(str);
-	}
+        if (nav->print & SSM_PRINT_LOG) {
+            snprintf(str, SSM_STR_BUFFSIZE, "%d\t logLike.: %g\t accepted: %d\t acc. rate: %g", m, fitness->log_like_prev + fitness->log_prior_prev, !(success & SSM_MH_REJECT), adapt->ar);
+            ssm_print_log(str);
+        }
     }
 
     if (!(nav->print & SSM_PRINT_LOG)) {
-	ssm_dic_end(fitness, nav, m);
-	ssm_pipe_theta(stdout, jparameters, theta, var, fitness, nav, opts);
+        ssm_dic_end(fitness, nav, m);
+        ssm_pipe_theta(stdout, jparameters, theta, var, fitness, nav, opts);
     }
 
     json_decref(jparameters);

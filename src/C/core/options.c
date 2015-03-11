@@ -78,7 +78,8 @@ void ssm_options_load(ssm_options_t *opts, ssm_algo_t algo, int argc, char *argv
         {"z", 'z', "tcp",            "dispatch particles across machines", no_argument,  SSM_SIMUL | SSM_SMC | SSM_PMCMC | SSM_MIF },
         {"b", 'b', "ic_only",        "only fit the initial condition using fixed lag smoothing", no_argument,  SSM_MIF },
         {"l", 'l', "least_squares",  "minimize the sum of squared errors instead of maximizing the likelihood", no_argument,  SSM_SIMPLEX },
-        {"g", 'g', "seed_time",      "seed the random number generator with the current time", no_argument,  SSM_WORKER | SSM_SMC | SSM_KALMAN | SSM_KMCMC | SSM_PMCMC | SSM_KSIMPLEX | SSM_SIMPLEX | SSM_MIF | SSM_SIMUL }
+        {"g", 'g', "seed_time",      "seed the random number generator with the current time", no_argument,  SSM_WORKER | SSM_SMC | SSM_KALMAN | SSM_KMCMC | SSM_PMCMC | SSM_KSIMPLEX | SSM_SIMPLEX | SSM_MIF | SSM_SIMUL },
+        {"o", 'o', "no-proposal",    "don't vary proposal (for tuning)", no_argument,  SSM_KMCMC | SSM_PMCMC }
     };
 
     int i;
@@ -308,6 +309,10 @@ void ssm_options_load(ssm_options_t *opts, ssm_algo_t algo, int argc, char *argv
 
         case 'g': //seed_time"
             opts->flag_seed_time = 1;
+            break;
+
+        case 'o': //no-proposal
+            opts->flag_no_proposal = 1;
             break;
 
         case '?':
