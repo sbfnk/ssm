@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
 
     if (nav->print & SSM_PRINT_LOG) {
         snprintf(str, SSM_STR_BUFFSIZE, "%d\t logLike.: %g\t accepted: %d\t acc. rate: %g", m, fitness->log_like_prev + fitness->log_prior_prev, !(success & SSM_MH_REJECT), adapt->ar);
-        ssm_print_log(str);
+        ssm_print_err(str);
     }
 
     ////////////////
@@ -237,14 +237,12 @@ int main(int argc, char *argv[])
 
         if (nav->print & SSM_PRINT_LOG) {
             snprintf(str, SSM_STR_BUFFSIZE, "%d\t logLike.: %g\t accepted: %d\t acc. rate: %g", m, fitness->log_like_prev + fitness->log_prior_prev, !(success & SSM_MH_REJECT), adapt->ar);
-            ssm_print_log(str);
+            ssm_print_err(str);
         }
     }
 
-    if (!(nav->print & SSM_PRINT_LOG)) {
-        ssm_dic_end(fitness, nav, m);
-        ssm_pipe_theta(stdout, jparameters, theta, var, fitness, nav, opts);
-    }
+    ssm_dic_end(fitness, nav, m);
+    ssm_pipe_theta(stdout, jparameters, theta, var, fitness, nav, opts);
 
     json_decref(jparameters);
 
